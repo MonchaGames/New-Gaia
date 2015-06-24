@@ -14,3 +14,5 @@ Avoid manual looping</br>
 PURE FUNCTIONS IF POSSIBLE</br>
 <b>Lua Specifics</b></br>
 Almost all variables should be local
+<b>Git stuff</b></br>
+Don't have descriptive commit messages? That's how you get shanked!
