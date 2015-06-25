@@ -9,7 +9,7 @@ function make.make_player(x, y)
 end
 
 function make.make_npc(x, y)
-	return Entity:new(NpcGraphicsComponent:new(), nil , x, y)
+	return Entity:new(NpcGraphicsComponent:new(), NpcInputComponent:new(), x, y)
 end
 
 
