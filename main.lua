@@ -1,22 +1,21 @@
-local SM = require 'StateMachine'
-local O = require 'OverworldState'
-local B = require 'BattleState'
+require 'MakeEntity'
 
 function love.load()
-    q = SM:new()
-    q:add("Over", O:new())
-    q:change("Over")
-    q:add("Battle", B:new())
+    Player = make.make_player()
 end
 
 function love.update(dt)
-    q:update(dt)
-    if love.keyboard.isDown("y") then
-       q:change("Battle") 
-     end
-
+    Player:update(dt)
 end
 
 function love.draw()
-    q:draw()
+    Player:draw()
+end
+
+function love.keypressed(key)
+    Player:handle_input(key, true)
+end
+
+function love.keyreleased(key)
+    Player:handle_input(key, false)
 end
