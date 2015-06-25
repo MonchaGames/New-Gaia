@@ -3,9 +3,9 @@ local Component = require 'Component'
 
 Entity = class('Entity')
 
-function Entity:initialize(GraphicsComponent, InputComponent)
-    self.x = 0
-    self.y = 0
+function Entity:initialize(GraphicsComponent, InputComponent, x, y)
+    self.x = x
+    self.y = y
 
     self.GraphicsComponent = GraphicsComponent or Component:new()
     self.InputComponent = InputComponent or Component:new()

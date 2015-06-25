@@ -64,6 +64,3 @@ function PlayerInputComponent:handle_input(key, is_pressed)
 
 end
 
-
-
-
