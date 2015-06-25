@@ -29,8 +29,9 @@ local bump = {
 }
 
 ------------------------------------------
--- Auxiliary functions PLEASE FUCKING WORK
+-- Auxiliary functions
 ------------------------------------------
+-- I think I get git
 local DELTA = 1e-10 -- floating-point margin of error
 
 local abs, floor, ceil, min, max = math.abs, math.floor, math.ceil, math.min, math.max
