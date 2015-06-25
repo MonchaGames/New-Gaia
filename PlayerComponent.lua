@@ -25,7 +25,7 @@ function PlayerGraphicsComponent:update(dt, Entity)
 end
 
 function PlayerGraphicsComponent:draw()
-    love.graphics.setColor(255,255,255)
+    love.graphics.setColor(self.color_r,self.color_g,self.color_b)
     love.graphics.rectangle('fill', self.x, self.y, self.size_x, self.size_y)
 end
 
