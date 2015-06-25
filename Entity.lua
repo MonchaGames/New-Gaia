@@ -1,4 +1,5 @@
 local class = require 'middleclass'
+local Component = require 'Component'
 
 Entity = class('Entity')
 
@@ -6,35 +7,27 @@ function Entity:initialize(GraphicsComponent, InputComponent)
     self.x = 0
     self.y = 0
 
-    self.GraphicsComponent = GraphicsComponent
-    self.InputComponent = InputComponent
+    self.GraphicsComponent = GraphicsComponent or Component:new()
+    self.InputComponent = InputComponent or Component:new()
 end
 
 function Entity:update(dt)
     assert(type(dt) == 'number')
 
-    if self.GraphicsComponent then
-        self.GraphicsComponent:update(dt, self)
-    end
+    self.GraphicsComponent:update(dt, self)
+    self.InputComponent:update(dt, self)
 
-    if self.InputComponent then
-        self.InputComponent:update(dt, self)
-    end
 end
 
 function Entity:draw()
-    if self.GraphicsComponent then
-        self.GraphicsComponent:draw()
-    end
+    self.GraphicsComponent:draw()
 end
 
 function Entity:handle_input(key, is_pressed)
     assert(type(key) == 'string')
     assert(type(is_pressed) == 'boolean')
 
-    if self.InputComponent then
-        self.InputComponent:handle_input(key, is_pressed)
-    end
+    self.InputComponent:handle_input(key, is_pressed)
 
 end
 

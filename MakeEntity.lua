@@ -1,5 +1,5 @@
 local Entity = require 'Entity'
-local Component = require 'Component'
+local PlayerComponent = require 'PlayerComponent'
 
 make = {}
 
