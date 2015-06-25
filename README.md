@@ -18,5 +18,4 @@ Almost all variables should be local</br>
 Don't have descriptive commit messages? That's how you get shanked!
 </br></br>
 <h2>Other stuff</h2>
-Use Object Oriented Programming</br>
 We're using Love2d, bump, and middleclass</br>
