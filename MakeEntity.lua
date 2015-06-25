@@ -4,12 +4,12 @@ local NpcComponent = require 'NpcComponent'
 
 make = {}
 
-function make.make_player(x, y)
-    return Entity:new(PlayerGraphicsComponent:new(), PlayerInputComponent:new(), x, y)
+function make.make_player(pos_x, pos_y, size_x, size_y, color_r, color_g, color_b)
+    return Entity:new(PlayerGraphicsComponent:new(), PlayerInputComponent:new(), pos_x, pos_y, size_x, size_y, color_r, color_g, color_b)
 end
 
-function make.make_npc(x, y)
-	return Entity:new(NpcGraphicsComponent:new(), NpcInputComponent:new(), x, y)
+function make.make_npc(pos_x, pos_y, size_x, size_y, color_r, color_g, color_b)
+	return Entity:new(NpcGraphicsComponent:new(), NpcInputComponent:new(), pos_x, pos_y, size_x, size_y, color_r, color_g, color_b)
 end
 
 

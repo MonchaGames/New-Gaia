@@ -5,6 +5,8 @@ PlayerGraphicsComponent = class("PlayerGraphicsComponent")
 function PlayerGraphicsComponent:initialize()
     self.x = 0
     self.y = 0
+    self.size_x = 0
+    self.size_y = 0
 end
 
 function PlayerGraphicsComponent:update(dt, Entity)
@@ -13,10 +15,18 @@ function PlayerGraphicsComponent:update(dt, Entity)
     self.x = Entity.x
     self.y = Entity.y
 
+    self.size_x = Entity.size_x
+    self.size_y = Entity.size_y
+
+    self.color_r = Entity.color_r
+    self.color_g = Entity.color_g
+    self.color_b = Entity.color_b
+
 end
 
 function PlayerGraphicsComponent:draw()
-    love.graphics.rectangle('fill', self.x, self.y, 30, 30)
+    love.graphics.setColor(255,255,255)
+    love.graphics.rectangle('fill', self.x, self.y, self.size_x, self.size_y)
 end
 
 PlayerInputComponent = class("PlayerInputComponent")
