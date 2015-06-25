@@ -29,7 +29,7 @@ local bump = {
 }
 
 ------------------------------------------
--- Auxiliary functions
+-- Auxiliary functions PLEASE FUCKING WORK
 ------------------------------------------
 local DELTA = 1e-10 -- floating-point margin of error
 
