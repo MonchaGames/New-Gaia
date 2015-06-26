@@ -5,19 +5,34 @@ TileLoader = class('TileLoader')
 function TileLoader:initialize(path)
 
     self.tile_data = dofile(path) 
+    assert(self.tile_data)
+
     self.width = self.tile_data.width
     self.height = self.tile_data.height
     self.tile_width = self.tile_data.tilewidth
     self.tile_height = self.tile_data.tileheight
     
-    self.texture = love.graphics.newImage(self.tile_data.tilesets[1].image)
+    self.textures = {}
+    self:generate_textures()
+
+
+
     self.quads = {}
-    self:generate_quads()
+    for k, v in ipairs(self.textures) do
+        self:generate_quads(v)
+    end
 end
 
-function TileLoader:generate_quads()
-   local height = self.texture:getHeight()
-   local width = self.texture:getWidth()
+function TileLoader:generate_textures()
+    for k, v in pairs(self.tile_data.tilesets) do
+        local texture = love.graphics.newImage(v.image)
+        table.insert(self.textures, texture)
+    end
+end
+
+function TileLoader:generate_quads(texture)
+   local height = texture:getHeight()
+   local width = texture:getWidth()
 
    local y_iter = math.floor(height / self.tile_height)
    local x_iter = math.floor(width / self.tile_width)
@@ -38,7 +53,11 @@ function TileLoader:generate_quads()
 end
 
 function TileLoader:draw()
-    local data = self.tile_data.layers[1]
+    self:draw_layer(2)
+end
+
+function TileLoader:draw_layer(layer)
+    local data = self.tile_data.layers[layer]
     
     for i=1, data.height do
         for x=1, data.width do
@@ -47,7 +66,7 @@ function TileLoader:draw()
             local tile = data.data[index]
             if tile > 0 then
                 local quad = self.quads[tile]
-                love.graphics.draw(self.texture, quad, (x-1) * self.tile_width, 
+                love.graphics.draw(self.textures[1], quad, (x-1) * self.tile_width, 
                 (i-1) * self.tile_height)
             end
         end
