@@ -7,7 +7,7 @@ require 'MakeEntity'
 OverworldState = class('OverworldState', State)
 
 function OverworldState:initialize()
-    self.tile = TileLoader("test.lua") 
+    self.tile = TileLoader("example.lua") 
 end
 
 function OverworldState:enter(params, parent) 
