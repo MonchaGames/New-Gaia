@@ -1,12 +1,13 @@
 local class = require 'middleclass'
 local State = require 'State'
+local TileLoader = require 'TileLoader'
 
 require 'MakeEntity'
 
 OverworldState = class('OverworldState', State)
 
 function OverworldState:initialize()
-     
+    self.tile = TileLoader("test.lua") 
 end
 
 function OverworldState:enter(params, parent) 
@@ -28,7 +29,8 @@ function OverworldState:update(dt)
     end
 end
 
-function OverworldState:draw()
+function OverworldState:draw() 
+    self.tile:draw()
     self.player:draw()
 end
 
