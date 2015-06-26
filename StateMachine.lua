@@ -5,6 +5,8 @@ StateMachine = class("StateMachine")
 
 function StateMachine:initialize()
     self.table_states = {}
+    
+    --Sets up some defaults
     self.table_states['State'] = State:new()
     self.current_state = self.table_states['State']
     self.current_state_name = 'State'
@@ -20,8 +22,9 @@ function StateMachine:add(name, state)
 end
 
 function StateMachine:switch(name)
-    --assert(type(name) == 'string')
-    --check if attempting to change to current_state
+    assert(type(name) == 'string')
+    --check if attempting to change to current_state and
+    --aborting if so
     if (name == self.current_state_name) then return end
     
     local params = self.current_state:return_params()
