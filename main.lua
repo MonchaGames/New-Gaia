@@ -1,21 +1,26 @@
+local StateMachine = require 'StateMachine'
+local OverworldState = require 'OverworldState'
+
 require 'MakeEntity'
 
 function love.load()
-    Player = make.make_player()
+    SM = StateMachine:new()
+    SM:add("Overworld", OverworldState:new())
+    SM:switch("Overworld")
 end
 
 function love.update(dt)
-    Player:update(dt)
+    SM:update(dt)
 end
 
 function love.draw()
-    Player:draw()
+    SM:draw()
 end
 
 function love.keypressed(key)
-    Player:handle_input(key, true)
+    SM:keypressed(key)
 end
 
 function love.keyreleased(key)
-    Player:handle_input(key, false)
+    SM:keyreleased(key)
 end
