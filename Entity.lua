@@ -3,16 +3,9 @@ local Component = require 'Component'
 
 Entity = class('Entity')
 
-function Entity:initialize(GraphicsComponent, InputComponent, pos_x, pos_y, size_x, size_y, color_r, color_g, color_b)
-    self.x = pos_x
-    self.y = pos_y
-
-    self.size_x = size_x
-    self.size_y = size_y
-
-    self.color_r = color_r
-    self.color_g = color_g
-    self.color_b = color_b
+function Entity:initialize(GraphicsComponent, InputComponent)
+    self.x = 0
+    self.y = 0
 
     self.GraphicsComponent = GraphicsComponent or Component:new()
     self.InputComponent = InputComponent or Component:new()
