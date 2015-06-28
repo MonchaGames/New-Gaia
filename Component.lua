@@ -18,4 +18,8 @@ function Component:handle_input(key, is_pressed)
     
 end
 
+function Component:add_world(Entity)
+
+end
+
 return Component

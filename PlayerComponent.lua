@@ -1,5 +1,7 @@
 local class = require 'middleclass'
 
+require 'misc'
+
 PlayerGraphicsComponent = class("PlayerGraphicsComponent")
 
 function PlayerGraphicsComponent:initialize()
@@ -16,7 +18,7 @@ function PlayerGraphicsComponent:update(dt, Entity)
 end
 
 function PlayerGraphicsComponent:draw()
-    love.graphics.rectangle('fill', self.x, self.y, 30, 30)
+    love.graphics.rectangle('fill', self.x, self.y, 50, 50)
 end
 
 PlayerInputComponent = class("PlayerInputComponent")
@@ -32,20 +34,21 @@ function PlayerInputComponent:update(dt, Entity)
     assert(type(dt) == 'number')
     assert(type(Entity) == 'table')
 
-    local speed = 100.
+    local speed = Entity.speed or 50.
 
     if self.up then
-        Entity.y = Entity.y - speed * dt
+        Entity.vy = Entity.vy - speed * dt
     end
     if self.down then
-        Entity.y = Entity.y + speed * dt
+        Entity.vy = Entity.vy + speed * dt
     end
     if self.left then
-        Entity.x = Entity.x - speed * dt
+        Entity.vx = Entity.vx - speed * dt
     end
     if self.right then
-        Entity.x = Entity.x + speed * dt
+        Entity.vx = Entity.vx + speed * dt
     end
+
 end
 
 function PlayerInputComponent:handle_input(key, is_pressed)
@@ -64,6 +67,37 @@ function PlayerInputComponent:handle_input(key, is_pressed)
 
 end
 
+PlayerPhysicsComponent = class("PlayerPhysicComponent")
 
+function PlayerPhysicsComponent:initialize(world)
+    self.x_max = 100
+    self.y_max = 100
+    self.width = 50
+    self.height = 50
+    self.world = world
+end
 
+function PlayerPhysicsComponent:add_world(Entity)
+    self.world:add(self, Entity.x, Entity.y, self.width, self.height)
+end
+
+function PlayerPhysicsComponent:update(dt, Entity)
+    local friction = Entity.friction or 5
+    
+    --clamp velocity
+    Entity.vx = clamp(Entity.vx, -self.x_max, self.x_max)
+    Entity.vy = clamp(Entity.vy, -self.y_max, self.y_max)
+    
+    --smooth velocity
+    Entity.vx = smooth(Entity.vx, dt, friction)
+    Entity.vy = smooth(Entity.vy, dt, friction)
+
+    --calculate new position
+    local new_x = Entity.x + Entity.vx
+    local new_y = Entity.y + Entity.vy
+   
+    local true_x, true_y, cols, len = self.world:move(self, new_x, new_y)
+    Entity.x = true_x
+    Entity.y = true_y
+end
 
