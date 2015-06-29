@@ -8,8 +8,8 @@ function Entity:initialize(GraphicsComponent, InputComponent, PhysicsComponent)
     self.y = 0
     self.vx = 0
     self.vy = 0
-    self.friction = 12
-    self.speed = 60
+    self.friction = 15
+    self.speed = 55
 
     self.GraphicsComponent = GraphicsComponent or Component:new()
     self.InputComponent = InputComponent or Component:new()

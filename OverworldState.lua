@@ -26,8 +26,8 @@ function OverworldState:return_params()
 end
 
 function OverworldState:update(dt)
+    self.camera:update(dt) 
     self.player:update(dt)
-    self.camera:update(dt)
     if love.keyboard.isDown(' ') then
         self.parent:switch('State')
     end

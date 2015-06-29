@@ -70,8 +70,7 @@ end
 PlayerPhysicsComponent = class("PlayerPhysicComponent")
 
 function PlayerPhysicsComponent:initialize(world)
-    self.x_max = 100
-    self.y_max = 100
+    self.max_accel = 200
     self.width = 50
     self.height = 50
     self.world = world
@@ -85,8 +84,8 @@ function PlayerPhysicsComponent:update(dt, Entity)
     local friction = Entity.friction or 5
     
     --clamp velocity
-    Entity.vx = clamp(Entity.vx, -self.x_max, self.x_max)
-    Entity.vy = clamp(Entity.vy, -self.y_max, self.y_max)
+    Entity.vx = clamp(Entity.vx, -self.max_accel, self.max_accel)
+    Entity.vy = clamp(Entity.vy, -self.max_accel, self.max_accel)
     
     --smooth velocity
     Entity.vx = smooth(Entity.vx, dt, friction)

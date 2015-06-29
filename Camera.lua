@@ -2,25 +2,28 @@ local class = require 'middleclass'
 
 Camera = class("Camera")
 
-empty = {x = 0, y = 0}
+local height = love.window.getHeight()
+local width = love.window.getWidth()
 
 function Camera:initialize(Player, x, y)
 
     self.x = x or 0
     self.y = y or 0
+    self.vx = 0
+    self.vy = 0
     self.player = Player
 end
 
 function Camera:update(dt)
-    local height = love.window.getHeight()
-    local width = love.window.getWidth()
-    self.x = math.floor(self.player.x - width/2)
-    self.y = math.floor(self.player.y - height/2)
 end
 
 function Camera:set()
     love.graphics.push()
-    love.graphics.translate(-self.x, -self.y) 
+    love.graphics.translate(round(-self.x), round(-self.y)) 
+    love.graphics.rotate(-0)
+
+    self.x = self.player.x - width/2
+    self.y = self.player.y - height/2
 end
 
 function Camera:pop()
