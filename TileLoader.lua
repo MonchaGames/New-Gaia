@@ -4,7 +4,7 @@ TileLoader = class('TileLoader')
 
 --[[
 TODO:
-Have the TileLoader generate a bounding box and add that to a bump 2.0 world.
+
 --]]
 function TileLoader:initialize(path, world)
    
@@ -48,32 +48,49 @@ function TileLoader:generate_collision()
         return
     end
     
-    --find collision layer
+    --find collision layer; both a tile one and potentially an
+    --object one
     local coll = nil
+    local obj_coll = nil
     for k, v in pairs(self.tile_data.layers) do
         if v.name == 'coll' then
-            coll = v
+            if v.type == 'tilelayer' then
+                coll = v
+            elseif v.type == 'objectgroup' then
+                obj_coll = v
+            end
         end
     end
-
-    if not coll then
-        return
-    end
-
+    
+    if coll then
     --loop through and create a new box for each tile not empty
-    for i=1, coll.height do
-        for x=1, coll.width do
-            local index = ((i-1) * coll.width) + (x-1) + 1
-            if (coll.data[index] > 0) then
-                local x = (x-1) * self.tile_width
-                local y = (i-1) * self.tile_height
-                local rect = {type = 'block', x = x, y = y, width = self.tile_width, self.tile_height}
+        for i=1, coll.height do
+            for x=1, coll.width do
+                local index = ((i-1) * coll.width) + (x-1) + 1
+                if (coll.data[index] > 0) then
+                    local x = (x-1) * self.tile_width
+                    local y = (i-1) * self.tile_height
+                    local rect = {type = 'block', x = x, y = y, 
+                    width = self.tile_width, height = self.tile_height}
 
-                self.world:add(rect, x, y, self.tile_width, self.tile_height) 
+                    self.world:add(rect, x, y, self.tile_width, self.tile_height) 
+                end
             end
         end
     end
 
+    if obj_coll then
+        for k, v in pairs(obj_coll.objects) do
+            if v.shape == 'rectangle' then
+                --for some reason the test map had rectangles of width zero
+                if (v.width <= 0 or v.height <= 0) then return end
+
+                local rect = {type = 'objcoll', x = v.x, y = v.y, width = v.width, 
+                height = v.height}
+                self.world:add(rect, v.x, v.y, v.width, v.height)
+            end
+        end
+    end
 end
 
 function TileLoader:generate_quads(texture)
@@ -111,15 +128,17 @@ end
 
 function TileLoader:draw()
     --placeholder
-    self:draw_layer(1)
-    self:draw_layer(2)
     self:draw_layer(3)
+    --self:draw_layer(2)
+    --self:draw_layer(3)
 end
 
 --Drawing is layer-based so that depth and z-layers can be simulated.
 function TileLoader:draw_layer(layer)
     local data = self.tile_data.layers[layer]
     
+    if data.type ~= 'tilelayer' then return end
+
     for i=1, data.height do
         for x=1, data.width do
             local index = ((i-1) * data.width) + (x-1) + 1
