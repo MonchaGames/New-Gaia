@@ -7,6 +7,7 @@ function love.load()
     SM = StateMachine:new()
     SM:add("Overworld", OverworldState:new())
     SM:switch("Overworld")
+    love.window.setTitle( "New Gaia" )
 end
 
 function love.update(dt)
