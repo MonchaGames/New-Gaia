@@ -3,12 +3,20 @@ local Component = require 'Component'
 
 Entity = class('Entity')
 
-function Entity:initialize(GraphicsComponent, InputComponent)
+function Entity:initialize(GraphicsComponent, InputComponent, PhysicsComponent)
     self.x = 0
     self.y = 0
+    self.vx = 0
+    self.vy = 0
+    self.friction = 15
+    self.speed = 55
 
     self.GraphicsComponent = GraphicsComponent or Component:new()
     self.InputComponent = InputComponent or Component:new()
+    self.PhysicsComponent = PhysicsComponent or Component:new()
+    
+    --add to bump world
+    self.PhysicsComponent:add_world(self)
 end
 
 function Entity:update(dt)
@@ -16,6 +24,7 @@ function Entity:update(dt)
 
     self.GraphicsComponent:update(dt, self)
     self.InputComponent:update(dt, self)
+    self.PhysicsComponent:update(dt, self) 
 
 end
 
