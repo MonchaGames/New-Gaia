@@ -11,8 +11,10 @@ function TileLoader:initialize(path, world)
     self.world = world or nil
     
     --Loads the tiled lua file
-    self.tile_data = dofile(path) 
-    assert(self.tile_data)
+    local chunk = love.filesystem.load(path)
+    assert(chunk, "Tilemap load failure")
+    self.tile_data = chunk()
+    assert(self.tile_data, "Tilemap contains no data")
 
     --Set some variables for convenience
     self.width = self.tile_data.width

@@ -10,7 +10,7 @@ OverworldState = class('OverworldState', State)
 
 function OverworldState:initialize()
     self.world = bump.newWorld(32)
-    self.tile = TileLoader("maps/example.lua", self.world) 
+    self.tile = TileLoader("/maps/example.lua", self.world) 
 end
 
 function OverworldState:enter(params, parent)
