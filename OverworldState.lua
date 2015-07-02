@@ -13,7 +13,7 @@ function OverworldState:initialize()
     self.tile = TileLoader("maps/example.lua", self.world) 
 end
 
-function OverworldState:enter(params, parent) 
+function OverworldState:enter(params, parent)
     self.player = params.player or make.make_player(self.world)
     self.parent = parent
     self.camera = Camera:new(self.player)
@@ -26,14 +26,14 @@ function OverworldState:return_params()
 end
 
 function OverworldState:update(dt)
-    self.camera:update(dt) 
+    self.camera:update(dt)
     self.player:update(dt)
     if love.keyboard.isDown(' ') then
         self.parent:switch('State')
     end
 end
 
-function OverworldState:draw() 
+function OverworldState:draw()
     self.camera:set()
 
     self.tile:draw()

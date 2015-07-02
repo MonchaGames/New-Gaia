@@ -1,18 +1,5 @@
 # TestRepo</br>
-<b>General</b></br>
-No more than 70 characters in one line</br>
-CaseShift for class names</br>
-snake_case for functions and variables</br>
-NO GLOBALS</br>
-Handle dependencies on a file-by-file basis (i.e, don't import something and rely on something that import imported. All dependencies should be clearly seen in the file)</br>
-Group related code with spaces</br>
-Spaces, not tabs</br>
-Explicit if possible, not implicit</br>
-Spaces between commas in function arguments (i.e foo(a, b))</br>
-Constants if possible</br>
-Avoid manual looping</br>
-PURE FUNCTIONS IF POSSIBLE</br>
-<b>Lua Specifics</b></br>
-Almost all variables should be local</br>
-<b>Git stuff</b></br>
-Don't have descriptive commit messages? That's how you get shanked!
+<h2>General</h2></br>
+Check out our coding standards (https://github.com/MonchaGames/TestRepo/wiki/Coding-Standards) before coding!
+<h2>Other stuff</h2>
+We're using Love2d, bump, and middleclass</br>
