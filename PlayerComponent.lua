@@ -85,6 +85,15 @@ end
 function PlayerPhysicsComponent:update(dt, Entity)
     local friction = Entity.friction or 5
 
+    --calculate new position
+    local new_x = Entity.x + Entity.vx * dt
+    local new_y = Entity.y + Entity.vy * dt
+
+    local true_x, true_y, cols, len = self.world:move(self, new_x, new_y)
+
+    Entity.x = true_x
+    Entity.y = true_y
+    
     --clamp velocity
     Entity.vx = clamp(Entity.vx, -self.max_accel, self.max_accel)
     Entity.vy = clamp(Entity.vy, -self.max_accel, self.max_accel)
@@ -93,11 +102,4 @@ function PlayerPhysicsComponent:update(dt, Entity)
     Entity.vx = smooth(Entity.vx, dt, friction)
     Entity.vy = smooth(Entity.vy, dt, friction)
 
-    --calculate new position
-    local new_x = Entity.x + Entity.vx
-    local new_y = Entity.y + Entity.vy
-
-    local true_x, true_y, cols, len = self.world:move(self, new_x, new_y)
-    Entity.x = true_x
-    Entity.y = true_y
 end
