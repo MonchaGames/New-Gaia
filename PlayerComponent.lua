@@ -92,12 +92,4 @@ function PlayerPhysicsComponent:update(dt, Entity)
     --smooth velocity
     Entity.vx = smooth(Entity.vx, dt, friction)
     Entity.vy = smooth(Entity.vy, dt, friction)
-
-    --calculate new position
-    local new_x = Entity.x + Entity.vx
-    local new_y = Entity.y + Entity.vy
-
-    local true_x, true_y, cols, len = self.world:move(self, new_x, new_y)
-    Entity.x = true_x
-    Entity.y = true_y
 end

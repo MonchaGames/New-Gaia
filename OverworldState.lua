@@ -28,6 +28,7 @@ end
 function OverworldState:update(dt)
     self.camera:update(dt)
     self.player:update(dt)
+    self.tile:track(self.player)
     if love.keyboard.isDown(' ') then
         self.parent:switch('State')
     end

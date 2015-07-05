@@ -2,44 +2,49 @@ local class = require 'middleclass'
 
 TileLoader = class('TileLoader')
 
---[[
-TODO:
-
---]]
 function TileLoader:initialize(path, world)
    
     self.world = world or nil
     
     --Loads the tiled lua file
-    self.tile_data = dofile(path) 
-    assert(self.tile_data)
+    local chunk = love.filesystem.load(path)
+    assert(chunk, "Tilemap load failure")
+    self.tile_data = chunk()
+    assert(self.tile_data, "Tilemap contains no data")
 
     --Set some variables for convenience
     self.width = self.tile_data.width
     self.height = self.tile_data.height
     self.tile_width = self.tile_data.tilewidth
     self.tile_height = self.tile_data.tileheight
-   
+
+    self.start_x = 1
+    self.start_y = 1
+    self.end_x = 5
+    self.end_y = 5
+
     --Get a table of all the textures used in the tilemap.
-    --Table is local because each quad knows what
-    --texture it uses
-    local textures = {}
-    self:generate_textures(textures)
+    self.textures = {}
+    self:generate_textures(self.textures)
     --P.S, tables in lua are passed by reference, which is this works
+   
     
     --Generates the quads for each texture.
     self.quads = {}
-    for k, v in ipairs(textures) do
+    for k, v in ipairs(self.textures) do
         self:generate_quads(v)
     end
     
     self:generate_collision()
+
+    self:batch_layer(3)
 end
 
 function TileLoader:generate_textures(textures)
     for k, v in pairs(self.tile_data.tilesets) do
         local image = love.graphics.newImage(v.image)
-        table.insert(textures, image)
+        local sprite_batch = love.graphics.newSpriteBatch(image, self.width * self.height, "stream")
+        table.insert(textures, {image, sprite_batch})
     end
 end
 
@@ -95,8 +100,8 @@ end
 
 function TileLoader:generate_quads(texture)
 
-   local height = texture:getHeight()
-   local width = texture:getWidth()
+   local height = texture[1]:getHeight()
+   local width = texture[1]:getWidth()
 
    --This gets the number of rows and columns of tiles that
    --can be generated from the given texture
@@ -120,6 +125,7 @@ function TileLoader:generate_quads(texture)
             local quad_wrap = {
             quad_raw, texture
             }
+
             table.insert(self.quads, quad_wrap)
        end
    end
@@ -128,31 +134,64 @@ end
 
 function TileLoader:draw()
     --placeholder
-    self:draw_layer(3)
-    --self:draw_layer(2)
-    --self:draw_layer(3)
+    self:batch_layer(3)
+    for k, v in pairs(self.textures) do love.graphics.draw(v[2]) end
 end
 
---Drawing is layer-based so that depth and z-layers can be simulated.
-function TileLoader:draw_layer(layer)
+function TileLoader:track(Entity)
+    assert(type(Entity) == 'table', "Track must have an entity to track.")
+    self:set_region(Entity.x - love.graphics.getWidth()/2, Entity.y - love.graphics.getHeight()/2, 
+    love.graphics.getWidth() + self.tile_width, love.graphics.getHeight() + self.tile_height)
+end
+
+function TileLoader:set_region(x, y, width, height)
+    self.start_x = math.max(1, math.floor(x / self.tile_width))
+    self.start_y = math.max(1, math.floor(y / self.tile_height))
+    self.end_x = self.start_x + math.floor(width / self.tile_width)
+    self.end_y = self.start_y + math.floor(height / self.tile_height)
+end
+
+function TileLoader:batch_layer(layer)
     local data = self.tile_data.layers[layer]
-    
+    assert(data, "Tile layer does not exists!") 
     if data.type ~= 'tilelayer' then return end
 
-    for i=1, data.height do
-        for x=1, data.width do
+    for k, v in pairs(self.textures) do
+        v[2]:clear()
+    end
+    
+    for i = self.start_y, self.end_y do
+        for x = self.start_x, self.end_x do
             local index = ((i-1) * data.width) + (x-1) + 1
             local tile = data.data[index]
             if tile > 0 then
                 local quad = self.quads[tile][1]
-                local texture = self.quads[tile][2] 
+                local sprite_batch = self.quads[tile][2][2]
+                local texture = self.quads[tile][2][1] 
+                sprite_batch:add(quad, (x-1) * self.tile_width, (i-1) * self.tile_height)
+            end
+        end
+    end 
+end
+
+function TileLoader:draw_layer(layer)
+    local data = self.tile_data.layers[layer]
+    
+    if data.type ~= 'tilelayer' then return end
+    
+    for i = self.start_y, self.end_y do
+        for x = self.start_x, self.end_x do
+            local index = ((i-1) * data.width) + (x-1) + 1
+            local tile = data.data[index]
+            if tile > 0 then
+                local quad = self.quads[tile][1]
+                local sprite_batch = self.quads[tile][2][2]
+                local texture = self.quads[tile][2][1]
                 
-                love.graphics.draw(texture, quad, (x-1) * self.tile_width, 
-                (i-1) * self.tile_height)
+                love.graphics.draw(texture, quad, (x-1) * self.tile_width, (i-1) * self.tile_height)
             end
         end
     end
-
 end
 
 return TileLoader
